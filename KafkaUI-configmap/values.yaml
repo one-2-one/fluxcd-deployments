@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-ui-values
+  namespace: infra
+data:
+  values.yaml: |
+    replicaCount: 0
+    existingConfigMap: kafka-ui-helm-env
+    resources:
+      limits:
+        cpu: 200m
+        memory: 512Mi
+      requests:
+        cpu: 200m
+        memory: 256Mi
+    image:
+      registry: gitlab.example.com:5000
+      repository: okd/apps/deployments/kafka-ui-image
+    imagePullSecrets: [{ name: gitlab-docker-auth }]

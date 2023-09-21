@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-ui
+  namespace: infra
+spec:
+
+  selector:
+    matchLabels:
+      app: kafka-ui
+  replicas: 0
+  template:
+    metadata:
+      labels:
+        app: kafka-ui
+    spec:
+      imagePullSecrets:
+      - name: gitlab-docker-auth
+      containers:
+        - name: kafka-ui
+          image: gitlab.example.com:5000/okd/apps/deployments/kafka-ui-image:v0.7.1
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "400m"
+            limits:
+              memory: "1Gi"
+              cpu: "600m"
+          env:
+            - name: TZ
+              value: Europe/Kiev
+            - name: KAFKA_CLUSTERS_0_NAME
+              value: dev
+            - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+              value: kafka-headless.infra.svc.cluster.local:9092
